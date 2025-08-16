@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎂 Custom Cake Orders</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .order-form {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .price-section {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .price-display {
+            margin-top: 20px;
+        }
+
+        .price-display h3 {
+            color: #667eea;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .price-display p {
+            color: #666;
+            font-style: italic;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .config-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .order-form {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .header p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🎂 Custom Cake Orders</h1>
+            <p>Order your perfect custom cake with instant price estimates!</p>
+        </header>
+
+        <div class="order-form">
+            <!-- Configuration Warning (shown if not configured) -->
+            <div id="configWarning" class="config-warning" style="display: none;">
+                <strong>⚠️ Configuration Missing:</strong> 
+                The cake ordering system hasn't been configured yet. 
+                Please contact the bakery directly or try again later.
+            </div>
+
+            <!-- Loading State -->
+            <div id="loadingState" class="loading">
+                <div>🔄 Loading order form...</div>
+                <small>Fetching latest pricing information...</small>
+            </div>
+
+            <!-- Main Form (hidden until loaded) -->
+            <div id="mainForm" style="display: none;">
+                <form id="orderForm">
+                    <div class="form-section">
+                        <h2>Customer Information</h2>
+                        
+                        <div class="form-group">
+                            <label>Full Name *</label>
+                            <input
+                                type="text"
+                                name="customerName"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Phone Number *</label>
+                            <input
+                                type="tel"
+                                name="customerPhone"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                name="customerEmail"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>Cake Details</h2>
+                        
+                        <div class="form-group">
+                            <label>Weight (pounds) *</label>
+                            <input
+                                type="number"
+                                name="weight"
+                                min="0.5"
+                                step="0.5"
+                                required
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Occasion *</label>
+                            <select name="occasion" required>
+                                <option value="">Select Occasion</option>
+                                <option value="birthday">Birthday</option>
+                                <option value="wedding">Wedding</option>
+                                <option value="anniversary">Anniversary</option>
+                                <option value="graduation">Graduation</option>
+                                <option value="corporate">Corporate Event</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Theme/Design *</label>
+                            <select name="theme" required>
+                                <option value="">Select Theme</option>
+                                <option value="simple">Simple Design</option>
+                                <option value="decorated">Decorated</option>
+                                <option value="custom_design">Custom Design</option>
+                                <option value="photo_cake">Photo Cake</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Delivery Date</label>
+                            <input
+                                type="date"
+                                name="deliveryDate"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Special Notes</label>
+                            <textarea
+                                name="notes"
+                                rows="3"
+                                placeholder="Any special requirements or design details..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <div class="price-section">
+                        <button type="button" onclick="calculatePrice()" class="calculate-btn">
+                            Calculate Price Estimate
+                        </button>
+                        
+                        <div id="priceDisplay" class="price-display" style="display: none;">
+                            <h3 id="priceAmount">$0</h3>
+                            <p><small>*Final price may vary based on design complexity</small></p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        📱 Send Order via WhatsApp
+                    </button>
+
+                    <div id="message" class="message" style="display: none;"></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global configuration object
+        let config = null;
+        let estimatedPrice = 0;
+
+        // Default fallback configuration
+        const defaultConfig = {
+            bakeryWhatsApp: "",
+            basePrice: 50,
+            occasions: {
+                birthday: 1.0,
+                wedding: 2.5,
+                anniversary: 1.5,
+                graduation: 1.2,
+                corporate: 1.8,
+                other: 1.0
+            },
+            themes: {
+                simple: 1.0,
+                decorated: 1.3,
+                custom_design: 1.8,
+                photo_cake: 2.0
+            }
+        };
+
+        // Load configuration from localStorage
+        function loadConfiguration() {
+            try {
+                const savedConfig = localStorage.getItem('cakeOrderConfig');
+                
+                if (savedConfig) {
+                    config = JSON.parse(savedConfig);
+                    
+                    // Validate essential configuration
+                    if (!config.bakeryWhatsApp || config.bakeryWhatsApp.trim() === '') {
+                        showConfigWarning();
+                        return false;
+                    }
+                    
+                    showMainForm();
+                    return true;
+                } else {
+                    // No configuration found, show warning
+                    showConfigWarning();
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error loading configuration:', error);
+                showConfigWarning();
+                return false;
+            }
+        }
+
+        // Show configuration warning
+        function showConfigWarning() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('configWarning').style.display = 'block';
+            document.getElementById('mainForm').style.display = 'none';
+        }
+
+        // Show main form
+        function showMainForm() {
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('configWarning').style.display = 'none';
+            document.getElementById('mainForm').style.display = 'block';
+        }
+
+        // Calculate price using loaded configuration
+        function calculatePrice() {
+            if (!config) {
+                showMessage('Configuration not loaded. Please refresh the page.', 'error');
+                return;
+            }
+
+            const form = document.getElementById('orderForm');
+            const formData = new FormData(form);
+            
+            const weight = parseFloat(formData.get('weight'));
+            const occasion = formData.get('occasion');
+            const theme = formData.get('theme');
+
+            if (!weight || !occasion || !theme) {
+                showMessage('Please fill in weight, occasion, and theme to calculate price', 'error');
+                return;
+            }
+
+            // Use configuration pricing rules
+            let total = weight * (config.basePrice || defaultConfig.basePrice);
+            total *= (config.occasions && config.occasions[occasion]) || defaultConfig.occasions[occasion] || 1;
+            total *= (config.themes && config.themes[theme]) || defaultConfig.themes[theme] || 1;
+            
+            estimatedPrice = Math.round(total);
+            
+            document.getElementById('priceAmount').textContent = `${estimatedPrice}`;
+            document.getElementById('priceDisplay').style.display = 'block';
+            hideMessage();
+        }
+
+        // Generate WhatsApp message
+        function generateWhatsAppMessage(formData) {
+            const message = `🎂 *NEW CAKE ORDER ENQUIRY*
+
+👤 *Customer Details:*
+Name: ${formData.get('customerName')}
+Phone: ${formData.get('customerPhone')}
+Email: ${formData.get('customerEmail') || 'Not provided'}
+
+🎂 *Cake Details:*
+• Weight: ${formData.get('weight')} pounds
+• Occasion: ${formData.get('occasion')}
+• Theme: ${formData.get('theme')}
+• Estimated Price: ${estimatedPrice}
+• Delivery Date: ${formData.get('deliveryDate') || 'Not specified'}
+• Special Notes: ${formData.get('notes') || 'None'}
+
+Please confirm availability and final pricing. Thank you!`;
+
+            return message;
+        }
+
+        // Create WhatsApp URL
+        function createWhatsAppURL(phoneNumber, message) {
+            const encodedMessage = encodeURIComponent(message);
+            const cleanPhone = phoneNumber.replace(/[\s\-\+\(\)]/g, '');
+            return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+        }
+
+        // Handle form submission
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!config || !config.bakeryWhatsApp) {
+                showMessage('Configuration not available. Please try again later.', 'error');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            // Validate required fields
+            if (!formData.get('customerName') || !formData.get('customerPhone') || 
+                !formData.get('weight') || !formData.get('occasion') || !formData.get('theme')) {
+                showMessage('Please fill in all required fields', 'error');
+                return;
+            }
+
+            if (estimatedPrice === 0) {
+                showMessage('Please calculate price first', 'error');
+                return;
+            }
+
+            // Generate WhatsApp message and URL
+            const message = generateWhatsAppMessage(formData);
+            const whatsappURL = createWhatsAppURL(config.bakeryWhatsApp, message);
+            
+            // Show success message and redirect
+            showMessage('Opening WhatsApp...', 'success');
+            
+            setTimeout(() => {
+                window.open(whatsappURL, '_blank');
+                showMessage('WhatsApp opened! Please send the message to complete your order.', 'success');
+                
+                // Reset form after a delay
+                setTimeout(() => {
+                    this.reset();
+                    estimatedPrice = 0;
+                    document.getElementById('priceDisplay').style.display = 'none';
+                    hideMessage();
+                }, 3000);
+            }, 1000);
+        });
+
+        // Utility functions for messages
+        function showMessage(text, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message ${type}`;
+            messageEl.style.display = 'block';
+        }
+
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+
+        // Listen for configuration updates
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'cakeOrderConfig' || e.key === 'configUpdated') {
+                // Configuration updated in admin panel, reload it
+                setTimeout(() => {
+                    if (loadConfiguration()) {
+                        showMessage('Settings updated! New pricing is now active.', 'success');
+                        // Recalculate price if form was filled
+                        const weight = document.querySelector('[name="weight"]').value;
+                        const occasion = document.querySelector('[name="occasion"]').value;
+                        const theme = document.querySelector('[name="theme"]').value;
+                        
+                        if (weight && occasion && theme) {
+                            calculatePrice();
+                        }
+                    }
+                }, 500);
+            }
+        });
+
+        // Initialize when page loads
+        window.addEventListener('load', function() {
+            // Small delay to show loading state
+            setTimeout(() => {
+                loadConfiguration();
+            }, 800);
+        });
+
+        // Refresh configuration every 30 seconds (in case localStorage sync fails)
+        setInterval(() => {
+            const savedConfig = localStorage.getItem('cakeOrderConfig');
+            if (savedConfig) {
+                const newConfig = JSON.parse(savedConfig);
+                // Check if configuration changed
+                if (JSON.stringify(newConfig) !== JSON.stringify(config)) {
+                    config = newConfig;
+                    console.log('Configuration auto-refreshed');
+                }
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
