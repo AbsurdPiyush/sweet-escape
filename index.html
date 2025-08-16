@@ -358,8 +358,8 @@
             total *= pricingRules.themes[theme] || 1;
             
             estimatedPrice = Math.round(total);
-            
-            document.getElementById('priceAmount').textContent = `$${estimatedPrice}`;
+            document.getElementById('priceAmount').textContent =
+    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(estimatedPrice);
             document.getElementById('priceDisplay').style.display = 'block';
             hideMessage();
         }
