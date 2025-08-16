@@ -3,174 +3,272 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🍰 Sweet Escape - Order</title>
+  <title>🎂 Custom Cake Order</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
+  
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      font-family: 'Poppins', sans-serif;
+      background: #fff8f0;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
     }
-
-    header {
+    h1, h2 {
+      font-family: 'Playfair Display', serif;
+      color: #d2691e;
       text-align: center;
-      padding: 40px 20px 20px;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      color: white;
-      width: 100%;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
     }
-
-    header h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-
-    form {
+    .container {
+      max-width: 800px;
+      margin: 20px auto;
       background: white;
-      padding: 30px;
-      margin: 30px;
-      border-radius: 15px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-      width: 100%;
-      max-width: 500px;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-
-    form h2 {
-      text-align: center;
-      margin-bottom: 20px;
-      color: #444;
+    .form-step {
+      display: none;
     }
-
+    .form-group {
+      margin-bottom: 15px;
+    }
     label {
       display: block;
-      margin-bottom: 8px;
-      font-weight: 600;
-      color: #333;
+      margin-bottom: 6px;
+      font-weight: 500;
     }
-
     input, select, textarea {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #25D366, #128C7E);
-      color: white;
-      border: none;
-      border-radius: 30px;
-      font-size: 18px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(37, 211, 102, 0.3);
-    }
-
-    footer {
-      margin-top: auto;
-      text-align: center;
-      padding: 15px;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
       font-size: 14px;
-      color: #555;
-      background: #fff5f7;
-      width: 100%;
+    }
+    textarea { resize: vertical; }
+    button {
+      background: #d2691e;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      margin: 5px;
+    }
+    button:hover { background: #b55216; }
+    .nav-buttons {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .summary-card {
+      background: #fff4e6;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Responsive Design */
+    @media (min-width: 768px) {
+      .form-row {
+        display: flex;
+        gap: 20px;
+      }
+      .form-row .form-group {
+        flex: 1;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🍰 Sweet Escape</h1>
-    <p>Place Your Cake Order</p>
-  </header>
 
-  <form id="orderForm">
-    <h2>Order Details</h2>
+  <div class="container">
+    <h1>🎂 Custom Cake Order</h1>
 
-    <label for="name">Your Name</label>
-    <input type="text" id="name" placeholder="Enter your name" required>
+    <form id="cakeForm">
+      
+      <!-- Step 1: Customer Info -->
+      <div class="form-step">
+        <h2>Step 1: Customer Info</h2>
+        <div class="form-group">
+          <label>Name *</label>
+          <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+          <label>Phone *</label>
+          <input type="tel" name="phone" required>
+        </div>
+        <div class="nav-buttons">
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
 
-    <label for="phone">Your Phone Number</label>
-    <input type="tel" id="phone" placeholder="Enter your phone number" required>
+      <!-- Step 2: Cake Details -->
+      <div class="form-step">
+        <h2>Step 2: Cake Details</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Weight (lbs) *</label>
+            <input type="number" name="weight" min="1" required>
+          </div>
+          <div class="form-group">
+            <label>Occasion *</label>
+            <select name="occasion" required>
+              <option value="">Select</option>
+              <option>Birthday</option>
+              <option>Wedding</option>
+              <option>Anniversary</option>
+              <option>Baby Shower</option>
+            </select>
+          </div>
+        </div>
 
-    <label for="flavor">Cake Flavor</label>
-    <select id="flavor" required>
-      <option value="">-- Select a flavor --</option>
-      <option value="Chocolate">Chocolate</option>
-      <option value="Vanilla">Vanilla</option>
-      <option value="Red Velvet">Red Velvet</option>
-      <option value="Butterscotch">Butterscotch</option>
-      <option value="Black Forest">Black Forest</option>
-    </select>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Theme / Design *</label>
+            <input type="text" name="theme" required>
+          </div>
+          <div class="form-group">
+            <label>Flavor *</label>
+            <select name="flavor" required>
+              <option value="">Select Flavor</option>
+              <option>Chocolate</option>
+              <option>Vanilla</option>
+              <option>Red Velvet</option>
+              <option>Butterscotch</option>
+              <option>Strawberry</option>
+              <option>Custom</option>
+            </select>
+          </div>
+        </div>
 
-    <label for="size">Cake Size</label>
-    <select id="size" required>
-      <option value="">-- Select size --</option>
-      <option value="1/2 Kg">1/2 Kg</option>
-      <option value="1 Kg">1 Kg</option>
-      <option value="2 Kg">2 Kg</option>
-      <option value="Custom">Custom</option>
-    </select>
+        <div class="form-group">
+          <label>Number of Tiers</label>
+          <select name="tiers">
+            <option value="1">1 Tier</option>
+            <option value="2">2 Tiers</option>
+            <option value="3">3 Tiers</option>
+            <option value="4">4 Tiers</option>
+          </select>
+        </div>
 
-    <label for="message">Custom Message on Cake</label>
-    <input type="text" id="message" placeholder="e.g. Happy Birthday!">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Delivery Date *</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" required>
+          </div>
+        </div>
 
-    <label for="date">Preferred Delivery Date</label>
-    <input type="date" id="date" required>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea name="notes"></textarea>
+        </div>
 
-    <label for="notes">Additional Notes</label>
-    <textarea id="notes" rows="3" placeholder="Mention theme, colors, or any special requests"></textarea>
+        <div class="nav-buttons">
+          <button type="button" class="prev-btn">Back</button>
+          <button type="button" class="next-btn">Next</button>
+        </div>
+      </div>
 
-    <button type="submit">📲 Send Order via WhatsApp</button>
-  </form>
+      <!-- Step 3: Summary -->
+      <div class="form-step">
+        <h2>Step 3: Order Summary</h2>
+        <div class="summary-card" id="summaryCard"></div>
+        <div class="nav-buttons">
+          <button type="button" class="prev-btn">Back</button>
+          <button type="submit">Send via WhatsApp</button>
+        </div>
+      </div>
 
-  <footer>
-    © 2025 Sweet Escape | Made with ❤️ for cake lovers
-  </footer>
+    </form>
+  </div>
 
   <script>
-    document.getElementById('orderForm').addEventListener('submit', function(e) {
-      e.preventDefault();
+    // Multi-step form
+    const steps = document.querySelectorAll(".form-step");
+    const nextBtns = document.querySelectorAll(".next-btn");
+    const prevBtns = document.querySelectorAll(".prev-btn");
+    let currentStep = 0;
 
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      const flavor = document.getElementById('flavor').value;
-      const size = document.getElementById('size').value;
-      const message = document.getElementById('message').value;
-      const date = document.getElementById('date').value;
-      const notes = document.getElementById('notes').value;
+    function showStep(step) {
+      steps.forEach((s, i) => {
+        s.style.display = i === step ? "block" : "none";
+      });
+    }
 
-      // Replace with your WhatsApp number (with country code, no + or spaces)
-      const whatsappNumber = "919876543210"; 
-
-      const text = 
-`*New Cake Order* 🍰
-👤 Name: ${name}
-📞 Phone: ${phone}
-🎂 Flavor: ${flavor}
-📏 Size: ${size}
-💬 Cake Message: ${message}
-📅 Delivery Date: ${date}
-📝 Notes: ${notes}
-
-⚠️ Please send your cake reference images separately here on WhatsApp.`;
-
-      const url = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
-      window.open(url, '_blank');
+    nextBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (currentStep < steps.length - 1) {
+          currentStep++;
+          updateSummary();
+          showStep(currentStep);
+        }
+      });
     });
+
+    prevBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (currentStep > 0) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      });
+    });
+
+    // Date validation (no past dates)
+    const deliveryDateInput = document.getElementById("deliveryDate");
+    const today = new Date().toISOString().split("T")[0];
+    deliveryDateInput.setAttribute("min", today);
+
+    // Currency formatter
+    const formatCurrency = (value) => {
+      return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(value);
+    };
+
+    // Live Summary
+    function updateSummary() {
+      const form = document.forms["cakeForm"];
+      const summary = document.getElementById("summaryCard");
+      let price = (form.weight.value || 0) * 500; // simple pricing example
+
+      summary.innerHTML = `
+        <p><strong>Name:</strong> ${form.name.value}</p>
+        <p><strong>Phone:</strong> ${form.phone.value}</p>
+        <p><strong>Weight:</strong> ${form.weight.value} lbs</p>
+        <p><strong>Occasion:</strong> ${form.occasion.value}</p>
+        <p><strong>Theme:</strong> ${form.theme.value}</p>
+        <p><strong>Flavor:</strong> ${form.flavor.value}</p>
+        <p><strong>Tiers:</strong> ${form.tiers.value}</p>
+        <p><strong>Delivery Date:</strong> ${form.deliveryDate.value}</p>
+        <p><strong>Notes:</strong> ${form.notes.value}</p>
+        <p><strong>Estimated Price:</strong> ${formatCurrency(price)}</p>
+      `;
+    }
+
+    // WhatsApp send
+    document.getElementById("cakeForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const form = e.target;
+      let msg = `🎂 *New Cake Order* 🎂\n\n` +
+                `👤 Name: ${form.name.value}\n` +
+                `📞 Phone: ${form.phone.value}\n` +
+                `⚖️ Weight: ${form.weight.value} lbs\n` +
+                `🎉 Occasion: ${form.occasion.value}\n` +
+                `🎨 Theme: ${form.theme.value}\n` +
+                `🍰 Flavor: ${form.flavor.value}\n` +
+                `🎂 Tiers: ${form.tiers.value}\n` +
+                `📅 Delivery: ${form.deliveryDate.value}\n` +
+                `📝 Notes: ${form.notes.value}\n\n` +
+                `💰 Estimated Price: ${formatCurrency((form.weight.value || 0) * 500)}`;
+
+      const url = `https://wa.me/91XXXXXXXXXX?text=${encodeURIComponent(msg)}`;
+      window.open(url, "_blank");
+    });
+
+    // Show first step
+    showStep(currentStep);
   </script>
 </body>
 </html>
