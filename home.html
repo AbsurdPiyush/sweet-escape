@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍰 Sweet Escape - Home</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+      color: white;
+      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    }
+
+    header p {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+
+    .hero {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+      background: url('cake.jpg') center/cover no-repeat;
+      color: white;
+      position: relative;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      animation: fadeInUp 1.2s ease;
+    }
+
+    .hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .order-btn {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 30px;
+      font-size: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .order-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      background: #fdf3f4;
+      color: #555;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    @media (max-width: 768px) {
+      header h1 { font-size: 2.2rem; }
+      .hero h2 { font-size: 1.8rem; }
+      .order-btn { font-size: 18px; padding: 12px 30px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍰 Sweet Escape</h1>
+    <p>Delicious Homemade Cakes Made Just for You</p>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Celebrate Every Occasion with a Perfect Cake 🎉</h2>
+      <p>From birthdays to weddings, anniversaries to sweet cravings — 
+         our custom cakes are baked with love, crafted to perfection, and delivered with care.</p>
+      <a href="order.html" class="order-btn">🛒 Order Now</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2025 Sweet Escape | Made with ❤️ for cake lovers
+  </footer>
+</body>
+</html>
