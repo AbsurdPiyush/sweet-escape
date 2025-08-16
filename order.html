@@ -188,6 +188,11 @@
         <textarea id="notes" placeholder="Any special instructions?"></textarea>
       </div>
 
+<div class="form-group">
+    <label><strong>Estimated Price</strong></label>
+    <p id="estimatePrice">—</p>
+</div>
+
       <div class="buttons">
         <button type="button" onclick="showStep(1)">⬅️ Back</button>
         <button type="button" onclick="showStep(3)">Next ➡️</button>
@@ -205,44 +210,92 @@
   </div>
 
   <script>
-    function showStep(n) {
-      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + n).classList.add('active');
+function showStep(n) {
+  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+  document.getElementById('step' + n).classList.add('active');
 
-      // When entering step 3, build summary
-      if (n === 3) {
-        const summaryHTML = `
-          <strong>Name:</strong> ${val('name')}<br>
-          <strong>Phone:</strong> ${val('phone')}<br>
-          <strong>Flavor:</strong> ${val('flavor')}<br>
-          <strong>Tiers:</strong> ${val('tiers')}<br>
-          <strong>Occasion:</strong> ${val('occasion')}<br>
-          <strong>Weight:</strong> ${val('weight')} kg<br>
-          <strong>Theme:</strong> ${val('theme') || 'N/A'}<br>
-          <strong>Delivery Date:</strong> ${val('deliveryDate')}<br>
-          <strong>Notes:</strong> ${val('notes') || 'N/A'}
-        `;
-        document.getElementById('summary').innerHTML = summaryHTML;
-      }
+  // When entering step 3, build summary
+  if (n === 3) {
+    const summaryHTML = `
+      <h3>🎂 NEW CAKE ORDER ENQUIRY</h3>
+      <p><strong>👤 Customer:</strong> ${val('name')}</p>
+      <p><strong>📞 Phone:</strong> ${val('phone')}</p>
+
+      <h4>🎂 Cake Details:</h4>
+      <p><strong>Weight:</strong> ${val('weight')} kg</p>
+      <p><strong>Flavor:</strong> ${val('flavor')}</p>
+      <p><strong>Occasion:</strong> ${val('occasion')}</p>
+      <p><strong>Tiers:</strong> ${val('tiers')}</p>
+      <p><strong>Theme:</strong> ${val('theme') || 'N/A'}</p>
+      <p><strong>Delivery Date:</strong> ${val('deliveryDate')}</p>
+      <p><strong>Notes:</strong> ${val('notes') || 'N/A'}</p>
+      <p><strong>💰 Estimated Price:</strong> ${document.getElementById("estimatePrice").innerText}</p>
+
+    `;
+    document.getElementById('summary').innerHTML = summaryHTML;
+  }
+}
+
+function val(id){ return document.getElementById(id).value; }
+
+  function sendToWhatsApp() {
+    const phoneNumber = "918210650013"; // ✅ Replace with your WhatsApp number
+
+    const msg = 
+      `🎂 NEW CAKE ORDER ENQUIRY\n\n` +
+      `👤 Customer: ${val('name')}\n` +
+      `📞 Phone: ${val('phone')}\n` +
+
+      `🎂 Cake Details:\n` +
+      `* Weight: ${val('weight')} kg\n` +
+      `* Flavor: ${val('flavor')}\n` +
+      `* Occasion: ${val('occasion')}\n` +
+      `* Theme: ${val('theme') || 'N/A'}\n` +
+      `* Delivery Date: ${val('deliveryDate')}\n` +
+      `* Notes: ${val('notes') || 'N/A'}\n` +
+      `💰 Estimated Price: ${document.getElementById("estimatePrice").innerText}\n\n` +
+
+      `📸 Image: (Please send reference image separately if any)\n\n` +
+      `Please confirm availability and final pricing.`;
+
+    // ✅ Proper encoding so WhatsApp accepts emojis & ₹
+    const encodedMsg = encodeURIComponent(msg);
+
+    // ✅ Open WhatsApp
+    window.open(`https://wa.me/${phoneNumber}?text=${encodedMsg}`, "_blank");
+  }
+function calculatePrice() {
+        const flavor = document.getElementById("flavor").value;
+        const tiers = parseInt(document.getElementById("tiers").value) || 1;
+        const weight = parseFloat(document.getElementById("weight").value) || 1;
+        const occasion = document.getElementById("occasion").value;
+
+        // Base price per kg depending on flavor
+        let basePrice = 800; // default
+        if (flavor === "Chocolate") basePrice = 900;
+        else if (flavor === "Red Velvet") basePrice = 1000;
+        else if (flavor === "Vanilla") basePrice = 750;
+
+        // Occasion multiplier (e.g., weddings/anniversaries more costly)
+        let occasionMultiplier = 1;
+        if (occasion === "Wedding") occasionMultiplier = 1.5;
+        else if (occasion === "Anniversary") occasionMultiplier = 1.3;
+
+        // Price formula
+        let price = weight * basePrice * tiers * occasionMultiplier;
+
+        // Format in INR
+        const formatter = new Intl.NumberFormat("en-IN", {
+            style: "currency",
+            currency: "INR"
+        });
+
+        document.getElementById("estimatePrice").innerText = formatter.format(price);
     }
-    function val(id){ return document.getElementById(id).value; }
 
-    function sendToWhatsApp() {
-      const phoneNumber = "918210650013"; // your WhatsApp number
-      const msg =
-        `New Cake Order:%0A` +
-        `Name: ${val('name')}%0A` +
-        `Phone: ${val('phone')}%0A` +
-        `Flavor: ${val('flavor')}%0A` +
-        `Tiers: ${val('tiers')}%0A` +
-        `Occasion: ${val('occasion')}%0A` +
-        `Weight: ${val('weight')} kg%0A` +
-        `Theme: ${val('theme') || 'N/A'}%0A` +
-        `Delivery Date: ${val('deliveryDate')}%0A` +
-        `Notes: ${val('notes') || 'N/A'}`;
-
-      window.open(`https://wa.me/${phoneNumber}?text=${msg}`, "_blank");
-    }
+    // Run calculation whenever inputs change
+    document.querySelectorAll("#flavor, #tiers, #weight, #occasion")
+        .forEach(el => el.addEventListener("change", calculatePrice));
 
     // Prevent past dates
     (function lockMinDate(){
