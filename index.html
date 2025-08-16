@@ -1,448 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎂 Custom Cake Orders</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🎂 Custom Cake Orders</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+    }
+    .header p { font-size: 1.2rem; opacity: 0.9; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px 0;
-        }
+    .order-form {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      padding: 40px;
+      animation: fadeIn 0.6s ease;
+    }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    @keyframes fadeIn {
+      from { opacity:0; transform: translateY(20px);}
+      to { opacity:1; transform: translateY(0);}
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
+    .form-section { margin-bottom: 30px; }
+    .form-section h2 {
+      color: #444;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-left: 6px solid #a6c1ee;
+      padding-left: 12px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #555;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e1e5e9;
+      border-radius: 10px;
+      font-size: 15px;
+      transition: all 0.3s ease;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #a6c1ee;
+      box-shadow: 0 0 0 4px rgba(166,193,238,0.2);
+      outline: none;
+    }
 
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
+    .price-section {
+      text-align: center;
+      margin: 30px 0;
+      padding: 20px;
+      background: #f7f9fc;
+      border-radius: 12px;
+    }
+    .calculate-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .calculate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(118,75,162,0.3);
+    }
+    .price-display { margin-top: 20px; }
+    .price-display h3 {
+      color: #667eea;
+      font-size: 2rem;
+      margin-bottom: 5px;
+    }
 
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(37,211,102,0.3);
+    }
 
-        .order-form {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-        }
+    .message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .message.success { background:#d4edda; color:#155724; border:1px solid #c3e6cb;}
+    .message.error { background:#f8d7da; color:#721c24; border:1px solid #f5c6cb;}
 
-        .form-section {
-            margin-bottom: 30px;
-        }
-
-        .form-section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .price-section {
-            text-align: center;
-            margin: 30px 0;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .calculate-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        .calculate-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .price-display {
-            margin-top: 20px;
-        }
-
-        .price-display h3 {
-            color: #667eea;
-            font-size: 2rem;
-            margin-bottom: 5px;
-        }
-
-        .price-display p {
-            color: #666;
-            font-style: italic;
-        }
-
-        .submit-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-            color: white;
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .submit-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
-        }
-
-        .submit-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .message {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .message.success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .message.error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 10px;
-            }
-            
-            .order-form {
-                padding: 20px;
-            }
-            
-            .header h1 {
-                font-size: 2rem;
-            }
-            
-            .header p {
-                font-size: 1rem;
-            }
-        }
-    </style>
+    @media(max-width:768px){
+      .order-form { padding: 20px;}
+      .header h1 { font-size:2rem;}
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>🎂 Custom Cake Orders</h1>
-            <p>Order your perfect custom cake with instant price estimates!</p>
-        </header>
+  <div class="container">
+    <header class="header">
+      <h1>🎂 Custom Cake Orders</h1>
+      <p>Design your dream cake with instant price estimates</p>
+    </header>
 
-        <div class="order-form">
-            <form id="orderForm">
-                <div class="form-section">
-                    <h2>Customer Information</h2>
-                    
-                    <div class="form-group">
-                        <label>Full Name *</label>
-                        <input
-                            type="text"
-                            name="customerName"
-                            required
-                        />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Phone Number *</label>
-                        <input
-                            type="tel"
-                            name="customerPhone"
-                            required
-                        />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input
-                            type="email"
-                            name="customerEmail"
-                        />
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h2>Cake Details</h2>
-                    
-                    <div class="form-group">
-                        <label>Weight (pounds) *</label>
-                        <input
-                            type="number"
-                            name="weight"
-                            min="0.5"
-                            step="0.5"
-                            required
-                        />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Occasion *</label>
-                        <select name="occasion" required>
-                            <option value="">Select Occasion</option>
-                            <option value="birthday">Birthday</option>
-                            <option value="wedding">Wedding</option>
-                            <option value="anniversary">Anniversary</option>
-                            <option value="graduation">Graduation</option>
-                            <option value="corporate">Corporate Event</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Theme/Design *</label>
-                        <select name="theme" required>
-                            <option value="">Select Theme</option>
-                            <option value="simple">Simple Design</option>
-                            <option value="decorated">Decorated</option>
-                            <option value="custom_design">Custom Design</option>
-                            <option value="photo_cake">Photo Cake</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Delivery Date</label>
-                        <input
-                            type="date"
-                            name="deliveryDate"
-                        />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Special Notes</label>
-                        <textarea
-                            name="notes"
-                            rows="3"
-                            placeholder="Any special requirements or design details..."
-                        ></textarea>
-                    </div>
-                </div>
-
-                <div class="price-section">
-                    <button type="button" onclick="calculatePrice()" class="calculate-btn">
-                        Calculate Price Estimate
-                    </button>
-                    
-                    <div id="priceDisplay" class="price-display" style="display: none;">
-                        <h3 id="priceAmount">$0</h3>
-                        <p><small>*Final price may vary based on design complexity</small></p>
-                    </div>
-                </div>
-
-                <button type="submit" class="submit-btn">
-                    📱 Send Order via WhatsApp
-                </button>
-
-                <div id="message" class="message" style="display: none;"></div>
-            </form>
+    <div class="order-form">
+      <form id="orderForm">
+        <div class="form-section">
+          <h2>👤 Customer Information</h2>
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" name="customerName" required/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" name="customerPhone" pattern="[0-9]{10}" placeholder="10-digit number" required/>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="customerEmail"/>
+          </div>
         </div>
+
+        <div class="form-section">
+          <h2>🎂 Cake Details</h2>
+          <div class="form-group">
+            <label>Weight (pounds) *</label>
+            <input type="number" name="weight" min="0.5" step="0.5" required/>
+          </div>
+          <div class="form-group">
+            <label>Flavor *</label>
+            <select name="flavor" required>
+              <option value="">Select Flavor</option>
+              <option value="chocolate">Chocolate</option>
+              <option value="vanilla">Vanilla</option>
+              <option value="red_velvet">Red Velvet</option>
+              <option value="butterscotch">Butterscotch</option>
+              <option value="strawberry">Strawberry</option>
+              <option value="black_forest">Black Forest</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Occasion *</label>
+            <select name="occasion" required>
+              <option value="">Select Occasion</option>
+              <option value="birthday">Birthday</option>
+              <option value="wedding">Wedding</option>
+              <option value="anniversary">Anniversary</option>
+              <option value="graduation">Graduation</option>
+              <option value="corporate">Corporate Event</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Theme/Design *</label>
+            <select name="theme" required>
+              <option value="">Select Theme</option>
+              <option value="simple">Simple Design</option>
+              <option value="decorated">Decorated</option>
+              <option value="custom_design">Custom Design</option>
+              <option value="photo_cake">Photo Cake</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Delivery Date *</label>
+            <input type="date" name="deliveryDate" required/>
+          </div>
+          <div class="form-group">
+            <label>Upload Reference Image</label>
+            <input type="file" accept="image/*" name="designImage"/>
+          </div>
+          <div class="form-group">
+            <label>Special Notes</label>
+            <textarea name="notes" rows="3" placeholder="Any special requirements..."></textarea>
+          </div>
+        </div>
+
+        <div class="price-section">
+          <button type="button" onclick="calculatePrice()" class="calculate-btn">💰 Calculate Price</button>
+          <div id="priceDisplay" class="price-display" style="display:none;">
+            <h3 id="priceAmount">₹0</h3>
+            <p><small>*Final price may vary based on complexity</small></p>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" disabled>📱 Send Order via WhatsApp</button>
+        <div id="message" class="message" style="display:none;"></div>
+      </form>
     </div>
+  </div>
 
-    <script>
-        // IMPORTANT: Replace this with your actual WhatsApp number
-        // Format: Country code + number (no +, spaces, or dashes)
-        // Example: For +91 98765-43210, use: 919876543210
-        const BAKERY_WHATSAPP_NUMBER = "918210650013"; // <-- CHANGE THIS TO YOUR NUMBER
+  <script>
+    const BAKERY_WHATSAPP_NUMBER = "918210650013";
 
-        // Pricing configuration
-        const pricingRules = {
-            basePrice: 50, // per pound
-            occasions: {
-                'birthday': 1.0,
-                'wedding': 2.5,
-                'anniversary': 1.5,
-                'graduation': 1.2,
-                'corporate': 1.8,
-                'other': 1.0
-            },
-            themes: {
-                'simple': 1.0,
-                'decorated': 1.3,
-                'custom_design': 1.8,
-                'photo_cake': 2.0
-            }
-        };
+    const pricingRules = {
+      basePrice: 1200, // per pound in INR
+      occasions: { birthday:1.0, wedding:2.5, anniversary:1.5, graduation:1.2, corporate:1.8, other:1.0 },
+      themes: { simple:1.0, decorated:1.3, custom_design:1.8, photo_cake:2.0 }
+    };
+    let estimatedPrice = 0;
 
-        let estimatedPrice = 0;
+    // Prevent past delivery dates
+    const today = new Date().toISOString().split("T")[0];
+    document.querySelector("input[name='deliveryDate']").setAttribute("min", today);
 
-        // Calculate price function
-        function calculatePrice() {
-            const form = document.getElementById('orderForm');
-            const formData = new FormData(form);
-            
-            const weight = parseFloat(formData.get('weight'));
-            const occasion = formData.get('occasion');
-            const theme = formData.get('theme');
+    function calculatePrice(){
+      const form = document.getElementById("orderForm");
+      const data = new FormData(form);
+      const weight = parseFloat(data.get("weight"));
+      const occasion = data.get("occasion");
+      const theme = data.get("theme");
 
-            if (!weight || !occasion || !theme) {
-                showMessage('Please fill in weight, occasion, and theme to calculate price', 'error');
-                return;
-            }
+      if(!weight || !occasion || !theme){
+        showMessage("Please fill in weight, occasion, and theme to calculate price","error");
+        return;
+      }
+      let total = weight * pricingRules.basePrice;
+      total *= pricingRules.occasions[occasion]||1;
+      total *= pricingRules.themes[theme]||1;
+      estimatedPrice = Math.round(total);
 
-            let total = weight * pricingRules.basePrice;
-            total *= pricingRules.occasions[occasion] || 1;
-            total *= pricingRules.themes[theme] || 1;
-            
-            estimatedPrice = Math.round(total);
-            document.getElementById('priceAmount').textContent =
-    new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(estimatedPrice);
-            document.getElementById('priceDisplay').style.display = 'block';
-            hideMessage();
-        }
+      document.getElementById("priceAmount").textContent =
+        new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(estimatedPrice);
 
-        // Generate WhatsApp message
-        function generateWhatsAppMessage(formData) {
-            const message = `🎂 *NEW CAKE ORDER ENQUIRY*
+      document.getElementById("priceDisplay").style.display="block";
+      hideMessage();
+      document.querySelector(".submit-btn").disabled = false;
+    }
 
-👤 *Customer Details:*
-Name: ${formData.get('customerName')}
-Phone: ${formData.get('customerPhone')}
-Email: ${formData.get('customerEmail') || 'Not provided'}
+    function generateWhatsAppMessage(data){
+      return `🎂 *NEW CAKE ORDER*%0A
+👤 *Customer:* ${data.get("customerName")}%0A
+📞 Phone: ${data.get("customerPhone")}%0A
+✉️ Email: ${data.get("customerEmail")||"Not provided"}%0A%0A
+🎂 *Cake Details:*%0A
+• Weight: ${data.get("weight")} lbs%0A
+• Flavor: ${data.get("flavor")}%0A
+• Occasion: ${data.get("occasion")}%0A
+• Theme: ${data.get("theme")}%0A
+• Delivery Date: ${data.get("deliveryDate")}%0A
+• Notes: ${data.get("notes")||"None"}%0A
+💰 *Estimated Price:* ${new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(estimatedPrice)}%0A%0A
+📸 Image: (Please send reference image separately if any)%0A%0A
+Please confirm availability and final pricing.`;
+    }
 
-🎂 *Cake Details:*
-• Weight: ${formData.get('weight')} pounds
-• Occasion: ${formData.get('occasion')}
-• Theme: ${formData.get('theme')}
-• Estimated Price: $${estimatedPrice}
-• Delivery Date: ${formData.get('deliveryDate') || 'Not specified'}
-• Special Notes: ${formData.get('notes') || 'None'}
+    function createWhatsAppURL(phone,message){
+      return `https://wa.me/${phone}?text=${message}`;
+    }
 
-Please confirm availability and final pricing. Thank you!`;
+    document.getElementById("orderForm").addEventListener("submit",function(e){
+      e.preventDefault();
+      const data = new FormData(this);
 
-            return message;
-        }
+      if(estimatedPrice===0){
+        showMessage("Please calculate price first","error");
+        return;
+      }
+      const msg = generateWhatsAppMessage(data);
+      const url = createWhatsAppURL(BAKERY_WHATSAPP_NUMBER,msg);
+      showMessage("Opening WhatsApp...","success");
+      setTimeout(()=>window.open(url,"_blank"),1000);
+    });
 
-        // Create WhatsApp URL
-        function createWhatsAppURL(phoneNumber, message) {
-            const encodedMessage = encodeURIComponent(message);
-            const cleanPhone = phoneNumber.replace(/[\s\-\+\(\)]/g, '');
-            return `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-        }
-
-        // Handle form submission
-        document.getElementById('orderForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            
-            // Validate required fields
-            if (!formData.get('customerName') || !formData.get('customerPhone') || 
-                !formData.get('weight') || !formData.get('occasion') || !formData.get('theme')) {
-                showMessage('Please fill in all required fields', 'error');
-                return;
-            }
-
-            if (estimatedPrice === 0) {
-                showMessage('Please calculate price first', 'error');
-                return;
-            }
-
-            // Generate WhatsApp message and URL
-            const message = generateWhatsAppMessage(formData);
-            const whatsappURL = createWhatsAppURL(BAKERY_WHATSAPP_NUMBER, message);
-            
-            // Show success message and redirect
-            showMessage('Opening WhatsApp...', 'success');
-            
-            setTimeout(() => {
-                window.open(whatsappURL, '_blank');
-                showMessage('WhatsApp opened! Please send the message to complete your order.', 'success');
-                
-                // Reset form after a delay
-                setTimeout(() => {
-                    this.reset();
-                    estimatedPrice = 0;
-                    document.getElementById('priceDisplay').style.display = 'none';
-                    hideMessage();
-                }, 3000);
-            }, 1000);
-        });
-
-        // Utility functions for messages
-        function showMessage(text, type) {
-            const messageEl = document.getElementById('message');
-            messageEl.textContent = text;
-            messageEl.className = `message ${type}`;
-            messageEl.style.display = 'block';
-        }
-
-        function hideMessage() {
-            document.getElementById('message').style.display = 'none';
-        }
-    </script>
+    function showMessage(txt,type){
+      const el=document.getElementById("message");
+      el.textContent=txt;
+      el.className=`message ${type}`;
+      el.style.display="block";
+    }
+    function hideMessage(){
+      document.getElementById("message").style.display="none";
+    }
+  </script>
 </body>
 </html>
