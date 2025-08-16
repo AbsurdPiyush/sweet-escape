@@ -1,274 +1,254 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎂 Custom Cake Order</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins&display=swap" rel="stylesheet">
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🎂 Custom Cake Orders</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
   <style>
+    /* --- Fix width + alignment across all fields --- */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; }
+
     body {
       font-family: 'Poppins', sans-serif;
-      background: #fff8f0;
+      background: linear-gradient(135deg, #6a11cb, #2575fc); /* same gradient vibe */
       margin: 0;
-      padding: 0;
-    }
-    h1, h2 {
-      font-family: 'Playfair Display', serif;
-      color: #d2691e;
-      text-align: center;
-    }
-    .container {
-      max-width: 800px;
-      margin: 20px auto;
-      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .form-step {
-      display: none;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 500;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    textarea { resize: vertical; }
-    button {
-      background: #d2691e;
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 15px;
-      margin: 5px;
-    }
-    button:hover { background: #b55216; }
-    .nav-buttons {
-      text-align: center;
-      margin-top: 15px;
-    }
-    .summary-card {
-      background: #fff4e6;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
 
-    /* Responsive Design */
-    @media (min-width: 768px) {
-      .form-row {
-        display: flex;
-        gap: 20px;
-      }
-      .form-row .form-group {
-        flex: 1;
-      }
+    .container {
+      background: #fff;
+      padding: 28px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      width: min(720px, 100%);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      text-align: center;
+      margin: 0 0 8px;
+      color: #212121;
+    }
+    p.subtitle {
+      text-align: center;
+      margin: 0 0 20px;
+      color: #616161;
+    }
+
+    .form-step { display: none; }
+    .form-step.active { display: block; }
+
+    .group { margin-bottom: 16px; }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    /* Normalize all controls to align perfectly */
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+      display: block;
+      width: 100%;
+      min-width: 0;                 /* prevents shrink issues */
+      padding: 12px 14px;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 10px;
+      font-size: 15px;
+      line-height: 1.4;
+      background: #fff;
+      color: #111;
+      outline: none;
+    }
+
+    /* Remove odd browser quirks */
+    input[type="number"] { -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Date field: keep full width and tidy icon */
+    input[type="date"] {
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    textarea { resize: vertical; min-height: 84px; }
+
+    .buttons { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+    .buttons > button { flex: 1 1 160px; }
+
+    button {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      border: none;
+      color: #fff;
+      font-weight: 700;
+      padding: 12px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform .06s ease, box-shadow .2s ease;
+    }
+    button:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(37,117,252,.25); }
+
+    .summary-card {
+      border: 1px solid #e5e7eb;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 16px;
+      line-height: 1.7;
+    }
+
+    /* Mobile tweaks */
+    @media (max-width: 600px) {
+      .container { padding: 22px; }
+      button { width: 100%; }
     }
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>🎂 Custom Cake Order</h1>
+    <h1>🎂 Custom Cake Orders</h1>
+    <p class="subtitle">Order your perfect custom cake with instant price estimates!</p>
 
-    <form id="cakeForm">
-      
-      <!-- Step 1: Customer Info -->
-      <div class="form-step">
-        <h2>Step 1: Customer Info</h2>
-        <div class="form-group">
-          <label>Name *</label>
-          <input type="text" name="name" required>
-        </div>
-        <div class="form-group">
-          <label>Phone *</label>
-          <input type="tel" name="phone" required>
-        </div>
-        <div class="nav-buttons">
-          <button type="button" class="next-btn">Next</button>
-        </div>
+    <!-- Step 1: Customer -->
+    <div class="form-step active" id="step1">
+      <div class="group">
+        <label for="name">Full Name *</label>
+        <input type="text" id="name" required />
+      </div>
+      <div class="group">
+        <label for="phone">Phone Number *</label>
+        <input type="tel" id="phone" required />
+      </div>
+      <div class="buttons">
+        <button type="button" onclick="showStep(2)">Next ➡️</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Cake Information -->
+    <div class="form-step" id="step2">
+      <div class="group">
+        <label for="flavor">Flavor *</label>
+        <select id="flavor" required>
+          <option value="">-- Select --</option>
+          <option>Chocolate</option>
+          <option>Vanilla</option>
+          <option>Red Velvet</option>
+          <option>Butterscotch</option>
+          <option>Strawberry</option>
+        </select>
       </div>
 
-      <!-- Step 2: Cake Details -->
-      <div class="form-step">
-        <h2>Step 2: Cake Details</h2>
-        <div class="form-row">
-          <div class="form-group">
-            <label>Weight (lbs) *</label>
-            <input type="number" name="weight" min="1" required>
-          </div>
-          <div class="form-group">
-            <label>Occasion *</label>
-            <select name="occasion" required>
-              <option value="">Select</option>
-              <option>Birthday</option>
-              <option>Wedding</option>
-              <option>Anniversary</option>
-              <option>Baby Shower</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Theme / Design *</label>
-            <input type="text" name="theme" required>
-          </div>
-          <div class="form-group">
-            <label>Flavor *</label>
-            <select name="flavor" required>
-              <option value="">Select Flavor</option>
-              <option>Chocolate</option>
-              <option>Vanilla</option>
-              <option>Red Velvet</option>
-              <option>Butterscotch</option>
-              <option>Strawberry</option>
-              <option>Custom</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Number of Tiers</label>
-          <select name="tiers">
-            <option value="1">1 Tier</option>
-            <option value="2">2 Tiers</option>
-            <option value="3">3 Tiers</option>
-            <option value="4">4 Tiers</option>
-          </select>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Delivery Date *</label>
-            <input type="date" id="deliveryDate" name="deliveryDate" required>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>Notes</label>
-          <textarea name="notes"></textarea>
-        </div>
-
-        <div class="nav-buttons">
-          <button type="button" class="prev-btn">Back</button>
-          <button type="button" class="next-btn">Next</button>
-        </div>
+      <div class="group">
+        <label for="tiers">Number of Tiers *</label>
+        <select id="tiers" required>
+          <option value="">-- Select --</option>
+          <option>1</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4+</option>
+        </select>
       </div>
 
-      <!-- Step 3: Summary -->
-      <div class="form-step">
-        <h2>Step 3: Order Summary</h2>
-        <div class="summary-card" id="summaryCard"></div>
-        <div class="nav-buttons">
-          <button type="button" class="prev-btn">Back</button>
-          <button type="submit">Send via WhatsApp</button>
-        </div>
+      <div class="group">
+        <label for="occasion">Occasion *</label>
+        <select id="occasion" required>
+          <option value="">-- Select --</option>
+          <option>Birthday</option>
+          <option>Wedding</option>
+          <option>Anniversary</option>
+          <option>Baby Shower</option>
+          <option>Other</option>
+        </select>
       </div>
 
-    </form>
+      <div class="group">
+        <label for="weight">Weight (kg) *</label>
+        <input type="number" id="weight" min="0.5" step="0.5" placeholder="e.g. 1.5" required />
+      </div>
+
+      <div class="group">
+        <label for="theme">Theme</label>
+        <input type="text" id="theme" placeholder="e.g. Cartoon, Floral, Elegant" />
+      </div>
+
+      <div class="group">
+        <label for="deliveryDate">Delivery Date *</label>
+        <input type="date" id="deliveryDate" required />
+      </div>
+
+      <div class="group">
+        <label for="notes">Additional Notes</label>
+        <textarea id="notes" placeholder="Any special instructions?"></textarea>
+      </div>
+
+      <div class="buttons">
+        <button type="button" onclick="showStep(1)">⬅️ Back</button>
+        <button type="button" onclick="showStep(3)">Next ➡️</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Summary -->
+    <div class="form-step" id="step3">
+      <div class="summary-card" id="summary"></div>
+      <div class="buttons">
+        <button type="button" onclick="showStep(2)">⬅️ Back</button>
+        <button type="button" onclick="sendToWhatsApp()">Send via WhatsApp 📲</button>
+      </div>
+    </div>
   </div>
 
   <script>
-    // Multi-step form
-    const steps = document.querySelectorAll(".form-step");
-    const nextBtns = document.querySelectorAll(".next-btn");
-    const prevBtns = document.querySelectorAll(".prev-btn");
-    let currentStep = 0;
+    function showStep(n) {
+      document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+      document.getElementById('step' + n).classList.add('active');
 
-    function showStep(step) {
-      steps.forEach((s, i) => {
-        s.style.display = i === step ? "block" : "none";
-      });
+      // When entering step 3, build summary
+      if (n === 3) {
+        const summaryHTML = `
+          <strong>Name:</strong> ${val('name')}<br>
+          <strong>Phone:</strong> ${val('phone')}<br>
+          <strong>Flavor:</strong> ${val('flavor')}<br>
+          <strong>Tiers:</strong> ${val('tiers')}<br>
+          <strong>Occasion:</strong> ${val('occasion')}<br>
+          <strong>Weight:</strong> ${val('weight')} kg<br>
+          <strong>Theme:</strong> ${val('theme') || 'N/A'}<br>
+          <strong>Delivery Date:</strong> ${val('deliveryDate')}<br>
+          <strong>Notes:</strong> ${val('notes') || 'N/A'}
+        `;
+        document.getElementById('summary').innerHTML = summaryHTML;
+      }
+    }
+    function val(id){ return document.getElementById(id).value; }
+
+    function sendToWhatsApp() {
+      const phoneNumber = "918210650013"; // your WhatsApp number
+      const msg =
+        `New Cake Order:%0A` +
+        `Name: ${val('name')}%0A` +
+        `Phone: ${val('phone')}%0A` +
+        `Flavor: ${val('flavor')}%0A` +
+        `Tiers: ${val('tiers')}%0A` +
+        `Occasion: ${val('occasion')}%0A` +
+        `Weight: ${val('weight')} kg%0A` +
+        `Theme: ${val('theme') || 'N/A'}%0A` +
+        `Delivery Date: ${val('deliveryDate')}%0A` +
+        `Notes: ${val('notes') || 'N/A'}`;
+
+      window.open(`https://wa.me/${phoneNumber}?text=${msg}`, "_blank");
     }
 
-    nextBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (currentStep < steps.length - 1) {
-          currentStep++;
-          updateSummary();
-          showStep(currentStep);
-        }
-      });
-    });
-
-    prevBtns.forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (currentStep > 0) {
-          currentStep--;
-          showStep(currentStep);
-        }
-      });
-    });
-
-    // Date validation (no past dates)
-    const deliveryDateInput = document.getElementById("deliveryDate");
-    const today = new Date().toISOString().split("T")[0];
-    deliveryDateInput.setAttribute("min", today);
-
-    // Currency formatter
-    const formatCurrency = (value) => {
-      return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(value);
-    };
-
-    // Live Summary
-    function updateSummary() {
-      const form = document.forms["cakeForm"];
-      const summary = document.getElementById("summaryCard");
-      let price = (form.weight.value || 0) * 500; // simple pricing example
-
-      summary.innerHTML = `
-        <p><strong>Name:</strong> ${form.name.value}</p>
-        <p><strong>Phone:</strong> ${form.phone.value}</p>
-        <p><strong>Weight:</strong> ${form.weight.value} lbs</p>
-        <p><strong>Occasion:</strong> ${form.occasion.value}</p>
-        <p><strong>Theme:</strong> ${form.theme.value}</p>
-        <p><strong>Flavor:</strong> ${form.flavor.value}</p>
-        <p><strong>Tiers:</strong> ${form.tiers.value}</p>
-        <p><strong>Delivery Date:</strong> ${form.deliveryDate.value}</p>
-        <p><strong>Notes:</strong> ${form.notes.value}</p>
-        <p><strong>Estimated Price:</strong> ${formatCurrency(price)}</p>
-      `;
-    }
-
-    // WhatsApp send
-    document.getElementById("cakeForm").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const form = e.target;
-      let msg = `🎂 *New Cake Order* 🎂\n\n` +
-                `👤 Name: ${form.name.value}\n` +
-                `📞 Phone: ${form.phone.value}\n` +
-                `⚖️ Weight: ${form.weight.value} lbs\n` +
-                `🎉 Occasion: ${form.occasion.value}\n` +
-                `🎨 Theme: ${form.theme.value}\n` +
-                `🍰 Flavor: ${form.flavor.value}\n` +
-                `🎂 Tiers: ${form.tiers.value}\n` +
-                `📅 Delivery: ${form.deliveryDate.value}\n` +
-                `📝 Notes: ${form.notes.value}\n\n` +
-                `💰 Estimated Price: ${formatCurrency((form.weight.value || 0) * 500)}`;
-
-      const url = `https://wa.me/91XXXXXXXXXX?text=${encodeURIComponent(msg)}`;
-      window.open(url, "_blank");
-    });
-
-    // Show first step
-    showStep(currentStep);
+    // Prevent past dates
+    (function lockMinDate(){
+      const today = new Date().toISOString().split("T")[0];
+      document.getElementById("deliveryDate").setAttribute("min", today);
+    })();
   </script>
 </body>
 </html>
