@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛠️ Cake Order Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .config-section {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .config-section h3 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .pricing-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .pricing-item label {
+            font-size: 12px;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        .status {
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .preview-section {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .preview-section h3 {
+            color: #1565c0;
+            margin-bottom: 15px;
+        }
+
+        .preview-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preview-link {
+            background: white;
+            color: #1565c0;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            border: 2px solid #90caf9;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .preview-link:hover {
+            background: #1565c0;
+            color: white;
+        }
+
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+            margin-bottom: 20px;
+        }
+
+        .info-box {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #bee5eb;
+            margin-bottom: 20px;
+        }
+
+        .config-export {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .config-json {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .admin-panel {
+                padding: 20px;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .preview-links {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🛠️ Cake Order Admin Panel</h1>
+            <p>Configure your cake ordering system settings</p>
+        </header>
+
+        <div class="admin-panel">
+            <div class="warning">
+                <strong>⚠️ Important:</strong> After making changes and clicking "Save Configuration", your customer order form will automatically use these new settings. Make sure to test your changes first!
+            </div>
+
+            <div class="info-box">
+                <strong>💡 How it works:</strong> Changes you make here are automatically applied to your customer order form (index.html). Customers will see updated pricing and use your configured WhatsApp number immediately after you save.
+            </div>
+
+            <!-- WhatsApp Configuration -->
+            <div class="config-section">
+                <h3>📱 WhatsApp Settings</h3>
+                <div class="form-group">
+                    <label>Your WhatsApp Number (where you'll receive orders)</label>
+                    <input 
+                        type="tel" 
+                        id="bakeryWhatsApp" 
+                        placeholder="e.g., 919876543210 (country code + number, no symbols)"
+                    >
+                    <small style="color: #6c757d; font-size: 12px;">
+                        Format: Country code + number (no +, spaces, or dashes)<br>
+                        Example: For +91 98765-43210, enter: 919876543210
+                    </small>
+                </div>
+            </div>
+
+            <!-- Pricing Configuration -->
+            <div class="config-section">
+                <h3>💰 Pricing Settings</h3>
+                
+                <div class="form-group">
+                    <label>Base Price per Pound ($)</label>
+                    <input 
+                        type="number" 
+                        id="basePrice" 
+                        placeholder="50"
+                        min="1"
+                        step="1"
+                    >
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0; color: #495057;">Occasion Multipliers</h4>
+                <div class="pricing-grid">
+                    <div class="pricing-item">
+                        <label>Birthday</label>
+                        <input type="number" id="occasion_birthday" step="0.1" min="0.1" value="1.0">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Wedding</label>
+                        <input type="number" id="occasion_wedding" step="0.1" min="0.1" value="2.5">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Anniversary</label>
+                        <input type="number" id="occasion_anniversary" step="0.1" min="0.1" value="1.5">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Graduation</label>
+                        <input type="number" id="occasion_graduation" step="0.1" min="0.1" value="1.2">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Corporate</label>
+                        <input type="number" id="occasion_corporate" step="0.1" min="0.1" value="1.8">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Other</label>
+                        <input type="number" id="occasion_other" step="0.1" min="0.1" value="1.0">
+                    </div>
+                </div>
+
+                <h4 style="margin: 20px 0 10px 0; color: #495057;">Theme/Design Multipliers</h4>
+                <div class="pricing-grid">
+                    <div class="pricing-item">
+                        <label>Simple Design</label>
+                        <input type="number" id="theme_simple" step="0.1" min="0.1" value="1.0">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Decorated</label>
+                        <input type="number" id="theme_decorated" step="0.1" min="0.1" value="1.3">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Custom Design</label>
+                        <input type="number" id="theme_custom_design" step="0.1" min="0.1" value="1.8">
+                    </div>
+                    <div class="pricing-item">
+                        <label>Photo Cake</label>
+                        <input type="number" id="theme_photo_cake" step="0.1" min="0.1" value="2.0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <button onclick="saveConfiguration()" class="save-btn">
+                💾 Save Configuration
+            </button>
+
+            <div id="status" class="status" style="display: none;"></div>
+
+            <!-- Configuration Export -->
+            <div class="config-export">
+                <h4>📋 Current Configuration</h4>
+                <p style="font-size: 12px; color: #6c757d; margin-bottom: 10px;">
+                    This shows your current settings in JSON format (auto-updates when you save)
+                </p>
+                <div id="configJson" class="config-json"></div>
+            </div>
+        </div>
+
+        <!-- Preview Section -->
+        <div class="preview-section">
+            <h3>🔍 Test Your Order Form</h3>
+            <p style="margin-bottom: 15px;">Use these links to test your configuration:</p>
+            <div class="preview-links">
+                <a href="index.html" class="preview-link" target="_blank">📱 Customer Order Form</a>
+                <a href="admin.html" class="preview-link">⚙️ Admin Panel (This Page)</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Default configuration
+        const defaultConfig = {
+            bakeryWhatsApp: "",
+            basePrice: 50,
+            occasions: {
+                birthday: 1.0,
+                wedding: 2.5,
+                anniversary: 1.5,
+                graduation: 1.2,
+                corporate: 1.8,
+                other: 1.0
+            },
+            themes: {
+                simple: 1.0,
+                decorated: 1.3,
+                custom_design: 1.8,
+                photo_cake: 2.0
+            }
+        };
+
+        // Load configuration on page load
+        function loadConfiguration() {
+            const savedConfig = localStorage.getItem('cakeOrderConfig');
+            const config = savedConfig ? JSON.parse(savedConfig) : defaultConfig;
+            
+            // Load WhatsApp number
+            document.getElementById('bakeryWhatsApp').value = config.bakeryWhatsApp || '';
+            
+            // Load base price
+            document.getElementById('basePrice').value = config.basePrice || 50;
+            
+            // Load occasion multipliers
+            Object.keys(config.occasions || defaultConfig.occasions).forEach(occasion => {
+                const element = document.getElementById(`occasion_${occasion}`);
+                if (element) {
+                    element.value = config.occasions[occasion];
+                }
+            });
+            
+            // Load theme multipliers
+            Object.keys(config.themes || defaultConfig.themes).forEach(theme => {
+                const element = document.getElementById(`theme_${theme}`);
+                if (element) {
+                    element.value = config.themes[theme];
+                }
+            });
+            
+            updateConfigDisplay();
+        }
+
+        // Save configuration
+        function saveConfiguration() {
+            try {
+                const config = {
+                    bakeryWhatsApp: document.getElementById('bakeryWhatsApp').value.trim(),
+                    basePrice: parseInt(document.getElementById('basePrice').value) || 50,
+                    occasions: {},
+                    themes: {},
+                    lastUpdated: new Date().toISOString()
+                };
+
+                // Validate WhatsApp number
+                if (!config.bakeryWhatsApp) {
+                    showStatus('Please enter your WhatsApp number', 'error');
+                    return;
+                }
+
+                if (config.bakeryWhatsApp.length < 10) {
+                    showStatus('WhatsApp number seems too short. Please check the format.', 'error');
+                    return;
+                }
+
+                // Save occasion multipliers
+                ['birthday', 'wedding', 'anniversary', 'graduation', 'corporate', 'other'].forEach(occasion => {
+                    const value = parseFloat(document.getElementById(`occasion_${occasion}`).value);
+                    config.occasions[occasion] = isNaN(value) ? defaultConfig.occasions[occasion] : value;
+                });
+
+                // Save theme multipliers
+                ['simple', 'decorated', 'custom_design', 'photo_cake'].forEach(theme => {
+                    const value = parseFloat(document.getElementById(`theme_${theme}`).value);
+                    config.themes[theme] = isNaN(value) ? defaultConfig.themes[theme] : value;
+                });
+
+                // Save to localStorage
+                localStorage.setItem('cakeOrderConfig', JSON.stringify(config));
+
+                // Also save to a global variable for the customer form to access
+                window.cakeOrderConfig = config;
+                
+                // Broadcast the change to other tabs/windows
+                localStorage.setItem('configUpdated', Date.now().toString());
+                
+                showStatus('✅ Configuration saved successfully! Your customer order form will now use these settings.', 'success');
+                updateConfigDisplay();
+                
+            } catch (error) {
+                console.error('Error saving configuration:', error);
+                showStatus('❌ Error saving configuration. Please try again.', 'error');
+            }
+        }
+
+        // Update the configuration display
+        function updateConfigDisplay() {
+            const savedConfig = localStorage.getItem('cakeOrderConfig');
+            const config = savedConfig ? JSON.parse(savedConfig) : defaultConfig;
+            
+            document.getElementById('configJson').textContent = JSON.stringify(config, null, 2);
+        }
+
+        // Show status message
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = message;
+            statusEl.className = `status ${type}`;
+            statusEl.style.display = 'block';
+            
+            // Auto-hide after 5 seconds for success messages
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusEl.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        // Load configuration when page loads
+        window.addEventListener('load', loadConfiguration);
+
+        // Listen for configuration updates from other tabs
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'cakeOrderConfig') {
+                loadConfiguration();
+            }
+        });
+    </script>
+</body>
+</html>
